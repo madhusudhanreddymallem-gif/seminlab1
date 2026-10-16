@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Session Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e8edff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            width: 300px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #homePage {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login Page -->
+    <div class="box" id="loginPage">
+        <h2>Login Page</h2>
+
+        <input type="text" id="username"
+               placeholder="Enter Username">
+
+        <input type="password" id="password"
+               placeholder="Enter Password">
+
+        <button onclick="login()">Login</button>
+
+        <p id="message"></p>
+    </div>
+
+    <!-- Home Page -->
+    <div class="box" id="homePage">
+        <h2>Welcome!</h2>
+
+        <p>User Name: <b id="displayName"></b></p>
+
+        <p>Login successful.</p>
+
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Check existing session
+        window.onload = function() {
+            let user = sessionStorage.getItem("username");
+
+            if (user) {
+                showHome(user);
+            }
+        };
+
+        // Login Function
+        function login() {
+            let user = document.getElementById("username").value.trim();
+            let pass = document.getElementById("password").value;
+
+            if (user === "" || pass === "") {
+                document.getElementById("message").innerText =
+                    "Please enter username and password.";
+                return;
+            }
+
+            if (pass !== "1234") {
+                document.getElementById("message").innerText =
+                    "Invalid password!";
+                return;
+            }
+
+            // Save username in localStorage
+            localStorage.setItem("savedUsername", user);
+
+            // Create active login session
+            sessionStorage.setItem("username", user);
+
+            showHome(user);
+        }
+
+        // Display Username
+        function showHome(user) {
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("homePage").style.display = "block";
+            document.getElementById("displayName").innerText = user;
+        }
+
+        // Logout Function
+        function logout() {
+            sessionStorage.removeItem("username");
+
+            document.getElementById("homePage").style.display = "none";
+            document.getElementById("loginPage").style.display = "block";
+
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("message").innerText =
+                "Logged out successfully!";
+        }
+    </script>
+
+</body>
+</html>
